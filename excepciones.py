@@ -1,33 +1,35 @@
 "Excepciones personalizadas del sistema"
 
+"Tipos de error para que cada problema tenga un nombre claro"
+
 
 class ErrorSoftwareFJ(Exception):
-    "Excepcion base todaslas demas heredan de ella"
+    "Todos los demás errores del sistema heredan de este"
 
 
 class ClienteInvalidoError(ErrorSoftwareFJ):
-    "Datos de cliente invalidos"
+    "Los datos del cliente no son válidos"
 
 
 class ServicioInvalidoError(ErrorSoftwareFJ):
-    "Parametros de servicio invalidos"
+    "Los datos del servicio no son válidos"
 
 
 class ServicioNoDisponibleError(ErrorSoftwareFJ):
-    "El servicio no esta disponible para reservar"
+    "El servicio existe, pero no se puede reservar en este momento"
 
 
 class ParametroFaltanteError(ErrorSoftwareFJ):
-    "Falta un parametro obligatorio"
+    "Falta un dato obligatorio"
 
 
 class ReservaInvalidaError(ErrorSoftwareFJ):
-    "Intento de reserva incorrecto"
+    "Se intentó crear o usar una reserva de forma incorrecta"
 
 
 class OperacionNoPermitidaError(ErrorSoftwareFJ):
-    "Operacion no permitida por el estado actual"
+    "La operación no se puede hacer en el estado actual o el dato ya existe"
 
 
 class CalculoInconsistenteError(ErrorSoftwareFJ):
-    "Calculo de costos con resultados inconsistentes"
+    "El cálculo del costo dio un resultado que no tiene sentido"
