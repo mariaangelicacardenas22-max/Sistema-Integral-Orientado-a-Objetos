@@ -10,9 +10,9 @@ Sistema Integral de Gestión de Clientes, Servicios y Reservas
 Software FJ
 
 # Servicios
-Reservas de salas
-Alquiler de equipos
-Asesorías especializadas
+- Reservas de salas
+- Alquiler de equipos
+- Asesorías especializadas
 
 # Principios Implemetados
 - Abstracción
