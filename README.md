@@ -30,6 +30,6 @@ Software FJ
 
 # Autora
 - Maria Angelica Cardenas Gomez
-- 213023_206
+- Grupo 213023_206
 - Programacion
 - Ingeniería de Sistemas
