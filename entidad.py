@@ -17,7 +17,7 @@ class EntidadBase(ABC):
 
     @abstractmethod
     def describir(self):
-        "Verifican los datos y generan una excepción si hay errores"
+         "Muestra la información de la entidad en texto"
 
     def __str__(self):
         return self.describir()
