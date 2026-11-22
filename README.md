@@ -45,7 +45,10 @@ Los eventos y errores quedan registrados en `logs/software_fj.log`
 - `reserva.py` Gestion de Reservas
 - `excepciones.py`Excepciones personalizadas
 - `gestor.py` Listas internas y captura de errores
-- `logger.py` Configuración del archivo de logs 
+- `logger.py` Configuración del archivo de logs
+
+# Logs
+Ejecutar type logs\software_fj.log
 
 # Autora
 - Maria Angelica Cardenas Gomez
