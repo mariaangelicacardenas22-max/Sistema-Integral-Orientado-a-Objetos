@@ -1,20 +1,23 @@
-"Clase Reserva integra cliente, servicio, duracion y estado"
+"Clase Reserva: integra cliente, servicio, duración y estado"
+
+"Una reserva pasa por estados"
 from cliente import Cliente
 from entidad import EntidadBase
 from excepciones import (ErrorSoftwareFJ, OperacionNoPermitidaError,
-                          ReservaInvalidaError, ServicioNoDisponibleError)
+                         ReservaInvalidaError, ServicioNoDisponibleError)
 from logger import log
 from servicios import Servicio
 
 
 class Reserva(EntidadBase):
-    PENDIENTE = "PENDIENTE"
-    CONFIRMADA = "CONFIRMADA"
-    CANCELADA = "CANCELADA"
-    PROCESADA = "PROCESADA"
+    # Los estados posibles se guardan como constantes para no escribirlos mal
+    Pendiente = "Pendiente"
+    Confirmada = "Confirmada"
+    Cancelada = "Cancelada"
+    Procesada = "Procesada"
 
     def __init__(self, cliente=None, servicio=None, horas=None):
-        super().__init__()
+        # Se revisa que lo recibido sea realmente un Cliente y un Servicio
         if not isinstance(cliente, Cliente):
             raise ReservaInvalidaError("La reserva requiere un cliente valido")
         if not isinstance(servicio, Servicio):
@@ -22,52 +25,60 @@ class Reserva(EntidadBase):
         if not servicio.disponible:
             raise ServicioNoDisponibleError(f"El servicio '{servicio.nombre}' no esta disponible")
         try:
+            # Cada servicio revisa las horas con sus propias reglas
             servicio.validar_parametros(horas)
         except ErrorSoftwareFJ as error:
+            # Cambiamos el mensaje, se conserva el motivo original
             raise ReservaInvalidaError("No se pudo crear la reserva. Duracion invalida") from error
+
+        # Si todo está bien, se guardan los datos
         self._cliente = cliente
         self._servicio = servicio
         self._horas = horas
-        self._estado = self.PENDIENTE
+        self._estado = self.Pendiente # Toda reserva nueva empieza en pendiente 
+        super().__init__("Reserva")    # El identificador se asigna al final
 
     @property
     def estado(self):
         return self._estado
 
     def confirmar(self):
-        if self._estado != self.PENDIENTE:
+        "Pendiente -> Confirmada"
+        if self._estado != self.Pendiente:
             raise OperacionNoPermitidaError(
-                f"Solo se confirma una reserva PENDIENTE (actual: {self._estado}).")
+                f"Solo se confirma una reserva pendiente (actual: {self._estado}).")
         if not self._servicio.disponible:
             raise ServicioNoDisponibleError("El servicio dejo de estar disponible")
-        self._estado = self.CONFIRMADA
+        self._estado = self.Confirmada
 
     def cancelar(self):
-        if self._estado in (self.CANCELADA, self.PROCESADA):
+        "Cancela la reserva, a menos que este cancelada o procesada"
+        if self._estado in (self.Cancelada, self.Procesada):
             raise OperacionNoPermitidaError(
                 f"No se puede cancelar una reserva {self._estado}.")
-        self._estado = self.CANCELADA
+        self._estado = self.Cancelada
 
     def calcular_total(self, impuesto=None, descuento=0.0):
-        "Variantes: calcular_total(), calcular_total(0.19), calcular_total(0.19, 0.1)"
+        "Método sobrecargado con parámetros opcionales"
         return self._servicio.calcular_costo_total(self._horas, impuesto, descuento)
 
     def procesar(self, descuento=0.0):
-        "Procesa la reserva"
-        total = None
+        "Confirmada-> Procesada. Muestra el total a pagar"
         try:
-            if self._estado != self.CONFIRMADA:
+            if self._estado != self.Confirmada:
                 raise OperacionNoPermitidaError(
-                    f"Solo se procesa una reserva CONFIRMADA (actual: {self._estado}).")
+                    f"Solo se procesa una reserva Confirmada (actual: {self._estado}).")
             total = self.calcular_total(descuento=descuento)
         except ErrorSoftwareFJ as error:
             log.error("Reserva #%s no procesada: %s", self.id, error)
-            raise
+            raise  # Vuelve a dar error para que lo vea quien llamó al método
         else:
-            self._estado = self.PROCESADA
+            # Si el try terminó sin errores
+            self._estado = self.Procesada
             log.info("Reserva #%s procesada. Total: $%s", self.id, f"{total:,.2f}")
             return total
         finally:
+            # Siempre se anota el intento en el log
             log.info("Intento de procesamiento finalizado para reserva #%s", self.id)
 
     def describir(self):
