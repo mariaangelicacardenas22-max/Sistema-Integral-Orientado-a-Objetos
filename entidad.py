@@ -17,7 +17,7 @@ class EntidadBase(ABC):
 
     @abstractmethod
     def describir(self):
-         "Muestra la información de la entidad en texto"
+         "Información de la entidad en texto"
 
     def __str__(self):
         return self.describir()
