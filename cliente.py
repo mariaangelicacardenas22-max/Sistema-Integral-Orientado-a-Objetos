@@ -56,7 +56,7 @@ class Cliente(EntidadBase):
         if valor is None or str(valor).strip() == "":
             raise ParametroFaltanteError("El correo es obligatorio")
         valor = str(valor).strip().lower()
-        # Acepta cualquier dominio: gmail, hotmail, outlook, yahoo, institucionales, etc.
+        # Acepta cualquier dominio como gmail, hotmail, outlook, yahoo, institucionales, entre otros
         if not re.fullmatch(r"[a-z0-9._+-]+@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}", valor):
             raise ClienteInvalidoError(
                 f"Correo invalido: '{valor}' (formato esperado: usuario@dominio.com).")
